@@ -7,7 +7,11 @@ const db = process.env.DATABASE_LOCAL || 8800;
 
 //connecting to mongoose erver locally
 mongoose
-  .connect(db, { useUnifiedTopology: true, useNewUrlParser: true })
+  .connect(db, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+  })
   .then(() => console.log(`database connected at port ${db}`))
   .catch((err) => console.error(err));
 
