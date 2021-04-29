@@ -1,11 +1,12 @@
 {
-  "name": "natours",
+  "name": "learning-express",
   "version": "1.0.0",
   "description": "Learning node, express and mongoDB",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "prod": "NODE_ENV=production nodemon server.js"
+    "prod": "NODE_ENV=production nodemon server.js",
+    "debug": "ndb server.js"
   },
   "author": "Dennis ",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
+    "ndb": "^1.1.5",
     "prettier": "^1.17.0"
   }
 }
