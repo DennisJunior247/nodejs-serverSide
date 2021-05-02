@@ -1,3 +1,4 @@
+const { promisify } = require("util");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
@@ -50,13 +51,45 @@ exports.protect = catchAsync(async (req, res, next) => {
   let token;
 
   if (
-    req.header.authorization &&
-    req.header.authorization.startswith("Bearer")
+    req.headers.Authorization &&
+    req.headers.Authorization.startswith("Bearer")
   ) {
-    token = req.header.authorization.split(" ")[1];
+    token = req.headers.Authorization.split(" ")[1];
   }
 
   if (!token) {
-    next(new AppError("you are not logged in", 401));
+    return next(new AppError("you are not logged in", 401));
   }
+
+  const decoded = promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(new AppError("user no longer exit"));
+  }
+
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(new AppError("paaword recently changed pls login", 401));
+  }
+  req.user = currentUser;
+  next();
+});
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError("permisssin denied", 403));
+    }
+    next();
+  };
+};
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const user = User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError("user does not exit", 404));
+  }
+
+  const resetToken = user.correctPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
 });
