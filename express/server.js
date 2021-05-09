@@ -1,39 +1,36 @@
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const app = require("./app");
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-//catching synchronous error //
-process.on("uncaughtException", (err) => {
+process.on('uncaughtException', err => {
+  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   console.log(err.name, err.message);
-  console.log("UNCAUGHT EXCEPTION");
   process.exit(1);
 });
 
-dotenv.config({ path: "./config.env" });
-const db = process.env.DATABASE_LOCAL || 8800;
+dotenv.config({ path: './config.env' });
+const app = require('./app');
 
-//connecting to mongoose erver locally
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
+
 mongoose
-  .connect(db, {
-    useUnifiedTopology: true,
+  .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
+    useFindAndModify: false
   })
-  .then(() => console.log(`database connected at port ${db}`))
-  .catch((err) => console.error(err));
-
-// connecting to express server//
+  .then(() => console.log('DB connection successful!'));
 
 const port = process.env.PORT || 3000;
-const host = "localhost";
-
-const server = app.listen(port, host, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-process.on("unhandledRejection", (err) => {
+process.on('unhandledRejection', err => {
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
   console.log(err.name, err.message);
-  console.log("UNHANDLED REJECTION");
   server.close(() => {
     process.exit(1);
   });
