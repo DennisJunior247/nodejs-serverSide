@@ -1,27 +1,42 @@
 const http = require("http")
+const bodyPaser = require('body-parser')
 
-function reLsiterner (req,res){
+const express = require('express')
 
-    const url =  req.url 
-    const method = req.method
+const app = express()
 
-    if (url === '/'){
-   
-        res.setHeader('content-type','text/html')
-        res.write("<html>")
-        res.write("<body> Hello this is infact not mu first node server! <body/>")
-        res.write("<html/>")
-    }
+app.use(bodyPaser.urlencoded({extended:false}))
 
+app.use((req,res,next)=>{
 
-    if (url === '/message'){
-        res.setHeader('content-type','text/html')
-        res.write("<html>")
-        res.write("<body> Hello World <body/>")
-        res.write("<html/>")
-    }
-}
+    res.send('<h1> Hello Dennis <h/>')
+    next()
 
-const server =  http.createServer(reLsiterner)
+})
+
+const server =  http.createServer(app)
 
 server.listen(3000)
+
+// function reLsiterner (req,res){
+
+//     const url =  req.url 
+//     const method = req.method
+
+//     if (url === '/'){
+   
+//         res.setHeader('content-type','text/html')
+//         res.write("<html>")
+//         res.write("<body> Hello this is infact not mu first node server! <body/>")
+//         res.write("<html/>")
+//     }
+
+
+//     if (url === '/message'){
+//         res.setHeader('content-type','text/html')
+//         res.write("<html>")
+//         res.write("<body> Hello World <body/>")
+//         res.write("<html/>")
+//     }
+// }
+
