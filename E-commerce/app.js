@@ -2,20 +2,17 @@ const http = require("http")
 const bodyPaser = require('body-parser')
 
 const express = require('express')
-
 const app = express()
+
+const admim = require('./routes/admin')
 
 app.use(bodyPaser.urlencoded({extended:false}))
 
-app.use((req,res,next)=>{
 
-    res.send('<h1> Hello Dennis <h/>')
-    next()
 
-})
+app.use('/admin',admim)
 
 const server =  http.createServer(app)
-
 server.listen(3000)
 
 // function reLsiterner (req,res){

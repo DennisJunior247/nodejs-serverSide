@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 router.post((req,res,next)=>{
-    console.log('dennis')
+    res.send('<h1> Hello Dennis <h/>')
 
 })
 
