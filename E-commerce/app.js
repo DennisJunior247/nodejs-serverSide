@@ -1,39 +1,25 @@
 const http = require("http")
-const bodyPaser = require('body-parser')
-
 const express = require('express')
+const bodyPaser = require('body-parser')
+const path = require('path')
+
+
+const admimRoutes = require('./routes/admin')
+const shopRoutes = require('./routes/shop')
+
 const app = express()
 
-const admim = require('./routes/admin')
-
 app.use(bodyPaser.urlencoded({extended:false}))
+app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/admin',admimRoutes)
+app.use(shopRoutes)
 
-
-app.use('/admin',admim)
+app.use((req,res,next)=>{
+    res.sendFile(path.join(__dirname, 'views','404.html'))
+})
 
 const server =  http.createServer(app)
 server.listen(3000)
 
-// function reLsiterner (req,res){
-
-//     const url =  req.url 
-//     const method = req.method
-
-//     if (url === '/'){
-   
-//         res.setHeader('content-type','text/html')
-//         res.write("<html>")
-//         res.write("<body> Hello this is infact not mu first node server! <body/>")
-//         res.write("<html/>")
-//     }
-
-
-//     if (url === '/message'){
-//         res.setHeader('content-type','text/html')
-//         res.write("<html>")
-//         res.write("<body> Hello World <body/>")
-//         res.write("<html/>")
-//     }
-// }
 
