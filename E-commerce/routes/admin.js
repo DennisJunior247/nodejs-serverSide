@@ -1,13 +1,13 @@
-const path = require('path');
 
 const express = require('express');
 
 const adminController = require('../controllers/admin');
 
 const router = express.Router();
+const isAuth = require('../middleware/isAuth')
 
 // /admin/add-product => GET
-router.get('/add-product', adminController.getAddProduct);
+router.get('/add-product', isAuth,adminController.getAddProduct);
 
 // /admin/products => GET
 router.get('/products', adminController.getProducts);
